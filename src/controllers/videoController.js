@@ -1,10 +1,12 @@
-export const recommended = (req, res) => res.send("Home Videos");
-export const see = (req, res) => {
-  return res.send(`Watch Video #${req.params.id}`);
+const fakeUser = {
+  username: "jola",
+  loggedIn: false,
 };
-export const edit = (req, res) => {
-  return res.send("Edit Video");
-};
+
+export const recommended = (req, res) =>
+  res.render("home", { pageTitle: "Home", fakeUser });
+export const see = (req, res) => res.render("watch", { pageTitle: "Watch" });
+export const edit = (req, res) => res.render("edit", { pageTitle: "Edit" });
 export const search = (req, res) => res.send("Search");
 export const upload = (req, res) => res.send("Upload");
 export const deleteVideo = (req, res) => {
