@@ -1,33 +1,38 @@
+let videos = [
+  {
+    title: "First Video",
+    rating: 5,
+    comments: 2,
+    createdAt: "2 minitues ago",
+    views: 1,
+    id: 1,
+  },
+  {
+    title: "Second Video",
+    rating: 5,
+    comments: 2,
+    createdAt: "2 minitues ago",
+    views: 59,
+    id: 2,
+  },
+  {
+    title: "Third Video",
+    rating: 5,
+    comments: 2,
+    createdAt: "2 minitues ago",
+    views: 59,
+    id: 3,
+  },
+];
+
 export const recommended = (req, res) => {
-  const videos = [
-    {
-      title: "First Video",
-      rating: 5,
-      comments: 2,
-      createdAt: "2 minitues ago",
-      views: 59,
-      id: 1,
-    },
-    {
-      title: "Second Video",
-      rating: 5,
-      comments: 2,
-      createdAt: "2 minitues ago",
-      views: 59,
-      id: 1,
-    },
-    {
-      title: "Third Video",
-      rating: 5,
-      comments: 2,
-      createdAt: "2 minitues ago",
-      views: 59,
-      id: 1,
-    },
-  ];
   res.render("home", { pageTitle: "Home", videos });
 };
-export const see = (req, res) => res.render("watch", { pageTitle: "Watch" });
+export const watch = (req, res) => {
+  const { id } = req.params;
+  const video = videos[id - 1];
+  res.render("watch", { pageTitle: `Watching ${video.title}`, video });
+};
 export const edit = (req, res) => res.render("edit", { pageTitle: "Edit" });
 export const search = (req, res) => res.send("Search");
 export const upload = (req, res) => res.send("Upload");
