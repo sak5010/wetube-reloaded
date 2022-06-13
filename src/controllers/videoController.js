@@ -31,11 +31,16 @@ export const recommended = (req, res) => {
 export const watch = (req, res) => {
   const { id } = req.params;
   const video = videos[id - 1];
-  res.render("watch", { pageTitle: `Watching ${video.title}`, video });
+  res.render("watch", { pageTitle: `Watching: ${video.title}`, video });
 };
-export const edit = (req, res) => res.render("edit", { pageTitle: "Edit" });
-export const search = (req, res) => res.send("Search");
-export const upload = (req, res) => res.send("Upload");
-export const deleteVideo = (req, res) => {
-  return res.send("Delete Video");
+export const getEdit = (req, res) => {
+  const { id } = req.params;
+  const video = videos[id - 1];
+  return res.render("edit", { pageTitle: `Editing: ${video.title}`, video });
+};
+export const postEdit = (req, res) => {
+  const { id } = req.params;
+  const { title } = req.body;
+  videos[id - 1].title = title; // 데이터베이스 사용하지 않고 배열에 직접 넣기 때문에 임시로 이렇게 작성.
+  return res.redirect(`/videos/${id}`);
 };
