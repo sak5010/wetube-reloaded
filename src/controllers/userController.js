@@ -68,23 +68,25 @@ export const startGithubLogin = (req, res) => {
   const params = new URLSearchParams(config).toString();
   const finalUrl = `${baseUrl}?${params}`;
   return res.redirect(finalUrl);
-}
+};
 
 export const finishGithubLogin = async (req, res) => {
   const baseUrl = "https://github.com/login/oauth/access_token";
   const config = {
     client_id: process.env.GH_CLIENT,
     client_secret: process.env.GH_SECRET,
-    code: req.query.code
+    code: req.query.code,
   };
   const params = new URLSearchParams(config).toString();
   const finalUrl = `${baseUrl}?${params}`;
-  const tokenRequest = await (await fetch(finalUrl, {
-    method: "POST",
-    headers: {
-      Accept: "application/json"
-    }
-  })).json();
+  const tokenRequest = await (
+    await fetch(finalUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+  ).json();
   if ("access_token" in tokenRequest) {
     const { access_token } = tokenRequest;
     const apiUrl = "https://api.github.com";
@@ -103,8 +105,8 @@ export const finishGithubLogin = async (req, res) => {
         },
       })
     ).json();
-    const emailObj = emailData.find((email) =>
-      email.primary === true && email.verified === true
+    const emailObj = emailData.find(
+      (email) => email.primary === true && email.verified === true
     );
     if (!emailObj) {
       // set notification
@@ -119,7 +121,7 @@ export const finishGithubLogin = async (req, res) => {
         password: "",
         location: userData.location,
         socialOnly: true,
-        avatarUrl: userData.avatar_url
+        avatarUrl: userData.avatar_url,
       });
     }
     req.session.loggedIn = true;
@@ -128,11 +130,17 @@ export const finishGithubLogin = async (req, res) => {
   } else {
     return res.redirect("/login");
   }
-}
+};
 
-export const edit = (req, res) => res.send("Edit user");
+export const getEdit = (req, res) => {
+  return res.render("edit-profile", { pageTitle: "Edit Profile" });
+};
+export const postEdit = (req, res) => {
+  return res.render("edit-profile");
+};
+
 export const logout = (req, res) => {
   req.session.destroy();
   return res.redirect("/");
-}
+};
 export const see = (req, res) => res.send("See Profile");
