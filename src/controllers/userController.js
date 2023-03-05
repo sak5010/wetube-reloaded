@@ -135,7 +135,20 @@ export const finishGithubLogin = async (req, res) => {
 export const getEdit = (req, res) => {
   return res.render("edit-profile", { pageTitle: "Edit Profile" });
 };
-export const postEdit = (req, res) => {
+export const postEdit = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: {
+      name, email, username, location
+    }
+  } = req;
+  await User.findByIdAndUpdate(_id, {
+    name, email, username, location
+  });
+  // db에서는 유저정보가 바뀌지만 session에서는 유저정보가 바뀌지 않음.
+  // 세션의 유저 정보도 업데이트 해줘야함.
   return res.render("edit-profile");
 };
 
