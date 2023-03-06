@@ -142,8 +142,10 @@ export const postEdit = async (req, res) => {
     },
     body: {
       name, email, username, location
-    }
+    },
+    file
   } = req;
+  console.log(file);
   if (req.session.user.name !== name) {
     const isExists = await User.findOne({name});
     if (isExists) {
