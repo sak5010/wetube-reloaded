@@ -192,4 +192,17 @@ export const logout = (req, res) => {
   req.session.destroy();
   return res.redirect("/");
 };
+
+export const getChangePassword = (req, res) => {
+  if (req.session.user.socialOnly) {
+    return res.redirect("/");
+  }
+  return res.render("user/change-password", { pageTitle: "Change Password" });
+}
+
+export const postChangePassword = (req, res) => {
+  // send notification
+  return res.redirect("/");
+}
+
 export const see = (req, res) => res.send("See Profile");
