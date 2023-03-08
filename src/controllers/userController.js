@@ -140,52 +140,56 @@ export const postEdit = async (req, res) => {
     session: {
       user: { _id, avatarUrl },
     },
-    body: {
-      name, email, username, location
-    },
-    file
+    body: { name, email, username, location },
+    file,
   } = req;
   if (req.session.user.name !== name) {
-    const isExists = await User.findOne({name});
+    const isExists = await User.findOne({ name });
     if (isExists) {
       return res.render("edit-profile", {
-         pageTitle: "Edit Profile",
-         errorMessage: `this name: ${name} is already taken.`
+        pageTitle: "Edit Profile",
+        errorMessage: `this name: ${name} is already taken.`,
       });
     }
   }
   if (req.session.user.email !== email) {
-    const isExists = await User.findOne({email});
+    const isExists = await User.findOne({ email });
     if (isExists) {
       return res.render("edit-profile", {
-         pageTitle: "Edit Profile",
-         errorMessage: `this email: ${email} is already taken.`
+        pageTitle: "Edit Profile",
+        errorMessage: `this email: ${email} is already taken.`,
       });
     }
   }
   if (req.session.user.username !== username) {
-    const isExists = await User.findOne({username});
+    const isExists = await User.findOne({ username });
     if (isExists) {
       return res.render("edit-profile", {
-         pageTitle: "Edit Profile",
-         errorMessage: `this username: ${username} is already taken.`
+        pageTitle: "Edit Profile",
+        errorMessage: `this username: ${username} is already taken.`,
       });
     }
   }
   if (req.session.user.location !== location) {
-    const isExists = await User.findOne({location});
+    const isExists = await User.findOne({ location });
     if (isExists) {
       return res.render("edit-profile", {
-         pageTitle: "Edit Profile",
-         errorMessage: `this location: ${location} is already taken.`
+        pageTitle: "Edit Profile",
+        errorMessage: `this location: ${location} is already taken.`,
       });
     }
   }
-  const updatedUser = await User.findByIdAndUpdate(_id, {
-    name, email, username, location,
-    avatarUrl: file ? file.path : avatarUrl,
-  },
-  { new: true });
+  const updatedUser = await User.findByIdAndUpdate(
+    _id,
+    {
+      name,
+      email,
+      username,
+      location,
+      avatarUrl: file ? file.path : avatarUrl,
+    },
+    { new: true }
+  );
   req.session.user = updatedUser;
   return res.redirect("/users/edit");
 };
@@ -200,41 +204,49 @@ export const getChangePassword = (req, res) => {
     return res.redirect("/");
   }
   return res.render("user/change-password", { pageTitle: "Change Password" });
-}
+};
 
 export const postChangePassword = async (req, res) => {
   const {
     session: {
       user: { _id },
     },
-    body: {
-      oldPassword, newPassword, newPassword2
-    }
+    body: { oldPassword, newPassword, newPassword2 },
   } = req;
   const user = await User.findById(_id);
   const ok = await bcrypt.compare(oldPassword, user.password);
   if (!ok) {
     return res.status(400).render("user/change-password", {
       pageTitle: "Change Password",
-      errorMessage: "The current password incorrect."
+      errorMessage: "The current password incorrect.",
     });
   }
   if (newPassword !== newPassword2) {
     return res.status(400).render("user/change-password", {
       pageTitle: "Change Password",
-      errorMessage: "The Password does not match the confirmation"
+      errorMessage: "The Password does not match the confirmation",
     });
   }
   if (oldPassword === newPassword) {
     return res.status(400).render("user/change-password", {
       pageTitle,
-      errorMessage: 'The old password equals new password',
+      errorMessage: "The old password equals new password",
     });
   }
   user.password = newPassword;
   await user.save();
   // send notification
   return res.redirect("/users/logout");
-}
+};
 
-export const see = (req, res) => res.send("See Profile");
+export const see = async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+  if (!user) {
+    return res.status(404).render("404", { pageTitle: "User not found." });
+  }
+  return res.render("user/profile", {
+    pageTitle: user.name,
+    user,
+  });
+};
