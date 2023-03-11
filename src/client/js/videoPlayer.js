@@ -80,6 +80,7 @@ const hideControls = () => videoControls.classList.remove("showing");
 
 const handleMouseMove = () => {
   if (controlsTimeout) {
+    // controlsTimeout 관련된 녀석들 지워도 될듯?
     clearTimeout(controlsTimeout);
     controlsTimeout = null;
   }
