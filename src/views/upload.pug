@@ -1,19 +1,20 @@
 extends base
 
 block content 
-  div 
-    video#preview
-    button#actionBtn Start Recording
-  if errorMassage 
-    span=errorMessage
-  form(method="POST", enctype="multipart/form-data")
-    label(for="video") Video File
-    input(type="file", accept="video/*", required, id="video", name="video")
-    label(for="thumb") Thumbnail File
-    input(type="file", accept="image/*", required, id="thumb", name="thumb")
-    input(type="text", placeholder="Title", required, name="title" maxlength=80)
-    input(type="text", placeholder="Description", required, name="description" minlength=20)
-    input(type="text", placeholder="Hashtags, separted by comma.", required, name="hashtags")
-    input(type="submit", value="Upload Video")
-  block scripts 
-    script(src="/static/js/recorder.js")
+  div.upload__container
+      div.upload__video
+          video#preview
+          button#actionBtn.social__btn Start Recording
+      if errorMessage
+          span=errorMessage
+      form(method="POST", enctype="multipart/form-data")
+          label(for="video") Video File
+          input(type="file", accept="video/*", required, id="video", name="video")
+          label(for="thumb") Thumbnail File
+          input(type="file", accept="image/*", required, id="thumb", name="thumb")
+          input(placeholder="Title", required, type="text", name="title", maxlength=80)
+          input(placeholder="Description", required, type="text", name="description", minlength=2)
+          input(placeholder="Hashtags, separated by comma.", required, type="text", name="hashtags")
+          input(type="submit", value="Upload Video")
+block scripts 
+  script(src="/static/js/recorder.js")
