@@ -97,7 +97,6 @@ export const finishGithubLogin = async (req, res) => {
         },
       })
     ).json();
-    // console.log(userData);
     const emailData = await (
       await fetch(`${apiUrl}/user/emails`, {
         headers: {
@@ -109,7 +108,7 @@ export const finishGithubLogin = async (req, res) => {
       (email) => email.primary === true && email.verified === true
     );
     if (!emailObj) {
-      // set notification
+      req.flash("error", "Email not found in github");
       return res.redirect("/login");
     }
     let user = await User.findOne({ email: emailObj.email });
@@ -196,11 +195,13 @@ export const postEdit = async (req, res) => {
 
 export const logout = (req, res) => {
   req.session.destroy();
+  req.flash("info", "Bye bye");
   return res.redirect("/");
 };
 
 export const getChangePassword = (req, res) => {
   if (req.session.user.socialOnly) {
+    req.flash("error", "Github user can't change password");
     return res.redirect("/");
   }
   return res.render("user/change-password", { pageTitle: "Change Password" });
@@ -235,7 +236,7 @@ export const postChangePassword = async (req, res) => {
   }
   user.password = newPassword;
   await user.save();
-  // send notification
+  req.flash("info", "Password updated");
   return res.redirect("/users/logout");
 };
 
