@@ -9,3 +9,5 @@ const commentSchema = mongoose.Schema({
 
 const Comment = mongoose.model("Comment", commentSchema);
 export default Comment;
+
+// Comment 모델을 만들어주고 User와 Video모델도 Comment와 관계를 맺으므로 수정해주었음.
