@@ -121,3 +121,17 @@ export const addView = async (req, res) => {
   await video.save();
   return res.sendStatus(200);
 };
+
+export const addComment = async (req, res) => {
+  // const { id } = req.params;
+  // const { text } = req.body;
+  // const video = await Video.findById(id);
+  // if (!video) {
+  //   return res.sendStatus(404);
+  // }
+  // Video의 Comment 속성에 추가?
+  console.log(req.params);
+  console.log(req.body);
+  return res.end();
+  // payload가 [object Object]로 보인다. body가 와야 되는데..
+};
