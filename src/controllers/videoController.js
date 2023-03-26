@@ -1,5 +1,6 @@
 import Video from "../models/Video";
 import User from "../models/User";
+import Comment from "../models/Comment";
 
 export const home = async (req, res) => {
   const videos = await Video.find({})
@@ -123,15 +124,19 @@ export const addView = async (req, res) => {
 };
 
 export const addComment = async (req, res) => {
-  // const { id } = req.params;
-  // const { text } = req.body;
-  // const video = await Video.findById(id);
-  // if (!video) {
-  //   return res.sendStatus(404);
-  // }
-  // Video의 Comment 속성에 추가?
-  console.log(req.params);
-  console.log(req.body);
-  return res.end();
-  // payload가 [object Object]로 보인다. body가 와야 되는데..
+  const {
+    session: { user },
+    body: { text },
+    params: { id },
+  } = req;
+  const video = await Video.findById(id);
+  if (!video) {
+    return res.sendStatus(404);
+  }
+  const comment = await Comment.create({
+    text,
+    owner: user._id,
+    video: id,
+  });
+  return res.sendStatus(201);
 };
