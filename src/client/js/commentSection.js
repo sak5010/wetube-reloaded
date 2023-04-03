@@ -1,5 +1,6 @@
 const videoContainer = document.querySelector("#videoContainer");
 const form = document.querySelector("#commentForm");
+const liComments = document.querySelectorAll(".video__comment");
 
 const addComment = (text, id) => {
   const videoComments = document.querySelector(".video__comments ul");
@@ -15,6 +16,7 @@ const addComment = (text, id) => {
   newComment.appendChild(icon);
   newComment.appendChild(span);
   newComment.appendChild(span2);
+  span2.addEventListener("click", handleCommentX);
   videoComments.prepend(newComment);
 };
 
@@ -40,6 +42,33 @@ const handleSubmit = async (event) => {
   }
 };
 
+const removeComment = (id) => {
+  const videoComments = document.querySelector(".video__comments ul");
+  for (const comment of videoComments.children) {
+    if (comment.dataset.id === id) {
+      comment.remove();
+    }
+  }
+};
+
+const handleCommentX = async (event) => {
+  const targetCommentDOM = event.target.parentNode;
+  const commentId = targetCommentDOM.dataset.id;
+  const response = await fetch(`/api/comments/${commentId}`, {
+    method: "DELETE",
+  });
+  if (response.status === 200) {
+    removeComment(commentId);
+  }
+};
+
 if (form) {
   form.addEventListener("submit", handleSubmit);
 }
+
+liComments.forEach((li) => {
+  const commentX = li.querySelector(".commentX");
+  if (commentX) {
+    commentX.addEventListener("click", handleCommentX);
+  }
+});
